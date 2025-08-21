@@ -1,0 +1,61 @@
+# Secrets and sensitive data
+.secrets/
+*.secret
+*_secret*
+.env
+.env.*
+*.key
+*.pem
+id_rsa*
+id_ed25519*
+
+# Cache and temporary files
+*.cache
+*.tmp
+*.temp
+.DS_Store
+Thumbs.db
+*.swp
+*.swo
+*~
+
+# Build artifacts
+build/
+dist/
+*.pyc
+__pycache__/
+node_modules/
+*.egg-info/
+.pytest_cache/
+
+# Personal notes that shouldn't be shared
+personal/
+private/
+NOTES_PRIVATE.md
+TODO_PERSONAL.md
+scratch/
+
+# IDE and editor files
+.vscode/
+.idea/
+*.sublime-*
+.vim/
+
+# OS-specific files
+.DS_Store
+.Spotlight-V100
+.Trashes
+Desktop.ini
+
+# Logs
+*.log
+logs/
+
+# Backup files
+*.bak
+*.backup
+*.old
+
+# Local overrides
+*.local
+.local/
