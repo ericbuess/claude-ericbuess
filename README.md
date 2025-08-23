@@ -77,9 +77,8 @@ My other tools that complement this setup:
 
 If you're here from a video:
 1. The code you saw is probably in here somewhere
-2. Check the `docs/videos/` folder for transcripts
-3. Remember: adapt, don't adopt
-4. Build your own version that fits your workflow
+2. Remember: adapt, don't adopt
+3. Build your own version that fits your workflow
 
 ## For the Curious
 
