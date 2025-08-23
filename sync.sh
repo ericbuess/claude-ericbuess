@@ -24,16 +24,68 @@ MODE=${1:-status}
 
 echo "OS: $OS_DIR | Mode: $MODE | Target: $TARGET_DIR"
 
+# Function to check for sensitive content
+check_sensitive() {
+    local file="$1"
+    
+    # Check filename patterns
+    case "$(basename "$file")" in
+        *.key|*.pem|*.p12|*.pfx|id_rsa*|id_ed25519*|id_dsa*)
+            echo "  ⚠️  SKIPPING (private key): $file"
+            return 1
+            ;;
+        .env|.env.*|*.env)
+            echo "  ⚠️  SKIPPING (env file): $file"
+            return 1
+            ;;
+        *secret*|*token*|*password*|*credential*)
+            echo "  ⚠️  SKIPPING (sensitive name): $file"
+            return 1
+            ;;
+    esac
+    
+    # For text files, check content
+    if [[ -f "$file" ]] && file "$file" | grep -q "text"; then
+        if grep -qE "(PRIVATE KEY|BEGIN RSA|BEGIN DSA|BEGIN EC|BEGIN OPENSSH)" "$file" 2>/dev/null; then
+            echo "  ⚠️  SKIPPING (contains private key): $file"
+            return 1
+        fi
+        if grep -qE "^[A-Z_]+_(KEY|TOKEN|SECRET|PASSWORD|API|CREDENTIAL)" "$file" 2>/dev/null; then
+            echo "  ⚠️  WARNING (may contain secrets): $file"
+            read -p "    Include this file anyway? (y/N) " -n 1 -r
+            echo
+            [[ ! $REPLY =~ ^[Yy]$ ]] && return 1
+        fi
+    fi
+    
+    return 0
+}
+
 # Function to safely copy files
 safe_copy() {
     local src="$1"
     local dest="$2"
     
     if [[ -e "$src" ]]; then
+        # Check for sensitive content first
+        if ! check_sensitive "$src"; then
+            return 1
+        fi
+        
         mkdir -p "$(dirname "$dest")"
         if [[ -d "$src" ]]; then
             echo "  Copying directory: $src"
-            rsync -a --delete "$src/" "$dest/"
+            # For directories, use rsync with exclude patterns
+            rsync -a --delete \
+                --exclude="*.key" \
+                --exclude="*.pem" \
+                --exclude="id_rsa*" \
+                --exclude="id_ed25519*" \
+                --exclude=".env" \
+                --exclude=".env.*" \
+                --exclude="*secret*" \
+                --exclude="*token*" \
+                "$src/" "$dest/"
         else
             echo "  Copying file: $src"
             cp "$src" "$dest"
