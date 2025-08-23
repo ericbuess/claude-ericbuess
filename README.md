@@ -70,6 +70,7 @@ The `sync.sh` script manages configs between your home directory and this reposi
 My other tools that complement this setup:
 
 - **[claude-code-project-index](https://github.com/ericbuess/claude-code-project-index)** - Tool for indexing codebases for Claude context
+- **[claude-code-docs](https://github.com/ericbuess/claude-code-docs)** - Documentation helper for Claude CLI
 - **[vm-bridge](https://github.com/ericbuess/vm-bridge)** - VM-to-host communication utilities
 
 ## For Video Viewers
