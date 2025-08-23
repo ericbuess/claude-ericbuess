@@ -1,0 +1,7 @@
+# Homebrew initialization (once at login)
+eval "$(/opt/homebrew/bin/brew shellenv)"
+
+# Add windsurf to PATH
+export PATH="/Users/ericbuess/.codeium/windsurf/bin:$PATH"
+
+# Removed PNPM PATH addition since it's being maintained in .zshrc

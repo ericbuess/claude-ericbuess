@@ -1,0 +1,12 @@
+# This is Git's per-user configuration file.
+[user]
+# Please adapt and uncomment the following lines:
+	name = Eric Buess
+	email = ericbuess@example.com
+[core]
+	pager = delta
+[pager]
+	diff = delta
+	show = delta
+	log = delta
+	blame = delta

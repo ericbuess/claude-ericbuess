@@ -1,0 +1,293 @@
+# Set prompt
+export PROMPT="%F{green}%n@%m%f:%F{blue}%~%f$ "
+# Load NVM
+[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
+[ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
+
+# Aliases
+alias gs='git status'
+alias cs='cd ~/Projects/codesavvy && code --add .'
+alias sl='sleep 5 && pmset displaysleepnow'
+alias ws='windsurf'
+alias c='claude --dangerously-skip-permissions'
+alias d='git diff | delta'
+alias t='tmux attach || tmux new -s main'
+alias ic="ssh ericbuess@10.211.55.4 'cat ~/Projects/claude-code-project-index/.clipboard_content.txt' | pbcopy"
+
+# Git helpers
+gp() {
+    if [ -z "$1" ]; then
+        echo "Error: Commit message required"
+        return 1
+    fi
+    git add -A
+    git commit -m "$1"
+    git push
+}
+
+ga() {
+    if [ -z "$1" ]; then
+        echo "Error: Commit message required"
+        return 1
+    fi
+    git pull --rebase
+    git commit --amend -m "$1"
+    git push --force-with-lease
+}
+
+gd() {
+    local current_branch=$(git rev-parse --abbrev-ref HEAD)
+    if [[ "$current_branch" != "main" && "$current_branch" != "dev" ]]; then
+        echo "Error: Not on main or dev branch"
+        return 1
+    fi
+    git checkout main && git merge dev && git push && git checkout dev
+}
+
+# uv helpers
+uve() {
+    if [ -z "$1" ]; then
+        echo "Error: Environment name required"
+        return 1
+    fi
+    uv venv "$1"
+    echo "Virtual environment '$1' created"
+    echo "Activate with: source $1/bin/activate"
+}
+
+uva() {
+    if [ -z "$1" ]; then
+        echo "Error: Environment name required"
+        return 1
+    fi
+    if [ ! -d "$1" ]; then
+        echo "Error: Environment '$1' not found"
+        return 1
+    fi
+    source "$1/bin/activate"
+    echo "Virtual environment '$1' activated"
+}
+
+# Activate .venv and run Python script with uv
+v() {
+    if [[ -f ".venv/bin/activate" ]]; then
+        source .venv/bin/activate && python "$@"
+    else
+        echo "Creating venv with uv..."
+        uv venv .venv && source .venv/bin/activate && uv pip install -r
+requirements.txt 2>/dev/null || true && python "$@"
+    fi
+}
+
+unalias update 2>/dev/null
+unalias vm 2>/dev/null
+
+# VM connection settings
+VM_HOST="ericbuess@10.211.55.4"
+MOSH_SSH_OPTS="-o StrictHostKeyChecking=accept-new -o BatchMode=yes"
+MOSH_BIN="$(command -v mosh || true)"
+
+# Plain mosh into the VM (no tmux)
+vm() {
+    if [ -n "$MOSH_BIN" ]; then
+        mosh --ssh="ssh $MOSH_SSH_OPTS -R 9999:localhost:9999" "$VM_HOST" -- "$@"
+    else
+        echo "mosh not found; falling back to ssh"
+        ssh $MOSH_SSH_OPTS -R 9999:localhost:9999 "$VM_HOST" "$@"
+    fi
+}
+
+# Mosh into a tmux session on the VM (attach if exists, create if not)
+vmt() {
+    local session="${1:-main}"
+    shift || true
+    if [ -n "$MOSH_BIN" ]; then
+        mosh --ssh="ssh $MOSH_SSH_OPTS -R 9999:localhost:9999" "$VM_HOST" -- tmux new-session -A -s "$session" "$@"
+    else
+        echo "mosh not found; falling back to ssh"
+        ssh $MOSH_SSH_OPTS -R 9999:localhost:9999 "$VM_HOST" "tmux new-session -A -s '$session' $*"
+    fi
+}
+
+update() {
+    echo "🚀 Starting full system update..."
+
+    echo "🔄 Checking and updating uv..."
+    if command -v brew &>/dev/null; then
+        if brew list --formula | grep -q "^uv$"; then
+            echo "Updating uv to latest version..."
+            brew upgrade uv
+            echo "✅ uv updated to $(uv --version 2>&1 | head -n 1)"
+        else
+            echo "uv not found in Homebrew. Installing..."
+            brew install uv
+            echo "✅ uv installed: $(uv --version 2>&1 | head -n 1)"
+        fi
+    else
+        echo "⚠️ Homebrew not found. Cannot update uv via Homebrew."
+    fi
+
+    echo "🔄 Updating Homebrew..."
+    brew update && brew upgrade
+
+    echo "🧹 Cleaning up Homebrew..."
+    brew cleanup
+
+    echo "🔄 Updating npm..."
+    npm install -g npm
+
+    echo "🧹 Clearing npm cache..."
+    npm cache clean --force
+
+    echo "🔄 Updating global npm packages..."
+    npm update -g
+
+    echo "🧹 Verifying npm cache..."
+    npm cache verify
+
+    echo "🔄 Updating pnpm..."
+    # The pnpm install script might show warnings, but it's standard.
+    # The subsequent 'pnpm update -g' updates global packages.
+    curl -fsSL https://get.pnpm.io/install.sh | sh -
+    pnpm update -g
+
+    # Conda has been removed from the system
+
+    # UV has replaced pip for package management
+    echo "🔄 Checking uv status..."
+    if command -v uv &>/dev/null; then
+        echo "✅ uv version: $(uv --version 2>&1 | head -n 1)"
+        echo "   Use 'uv venv <env_name>' to create virtual environments"
+        echo "   Use 'source <env_name>/bin/activate' to activate environments"
+    else
+        echo "⚠️ uv not installed. Consider installing with: brew install uv"
+    fi
+
+    echo "🔄 Updating NVM and Node.js versions..."
+    if command -v nvm &> /dev/null; then
+        # Capture the current Node.js version
+        previous_version=$(nvm version)
+
+        # Install the latest Node.js version and reinstall global packages from the previous version
+        nvm install node --reinstall-packages-from="$previous_version"
+
+        # Set the new version as the default
+        nvm alias default node
+
+        # Switch to the new default version silently
+        nvm use default --silent
+
+        # Update all global npm packages to their latest compatible versions
+        echo "🔄 Updating global npm packages..."
+        npm update -g
+
+        # Optional: Remove the old Node.js version to save space
+        # Uncomment the line below if you want to automatically remove the old version
+        # nvm uninstall "$previous_version"
+
+        echo "✅ Node.js updated to $(node -v) and global packages transferred."
+    fi
+
+    echo "🔄 Updating Docker components..."
+    # Docker update logic (no changes needed, warnings are appropriate)
+    if command -v docker &> /dev/null; then
+        if [ -d "/Applications/Docker.app" ]; then
+            echo "ℹ️ Docker Desktop detected. Please check for updates via the Docker Desktop application."
+        fi
+
+        if brew list --formula | grep -q "^docker$"; then
+            echo "Updating Docker CLI via Homebrew..."
+            brew upgrade docker
+        fi
+
+        if brew list --formula | grep -q "^docker-compose$"; then
+            echo "Updating Docker Compose via Homebrew..."
+            brew upgrade docker-compose
+        fi
+
+        if docker info &>/dev/null; then
+            echo "Updating Docker images for running containers..."
+            for img in $(docker ps --format '{{.Image}}'); do
+                echo "Pulling latest version of $img"
+                docker pull $img
+            done
+
+            echo "Pruning unused Docker images and volumes..."
+            docker system prune -af # Added -a flag to prune all unused images, not just dangling ones
+            docker volume prune -f
+        else
+            # This warning is expected and correct if Docker daemon isn't running
+            echo "⚠️ Docker daemon is not running. Skipping container updates and cleanup."
+            echo "   Start Docker Desktop to perform these operations."
+        fi
+    else
+        echo "⚠️ Docker not found. Skipping Docker updates."
+    fi
+
+    # Check uv availability
+    if command -v uv &>/dev/null; then
+        echo "uv version: $(uv --version 2>&1 | head -n 1)"
+    else
+        echo "⚠️ uv not found. Install with: brew install uv"
+    fi
+
+    echo "✅ All updates completed!"
+
+    # Don't source .zshrc directly to avoid recursion issues
+    echo "✅ Run 'source ~/.zshrc' to reload your configuration if needed"
+}
+
+# Conda has been removed from the system
+# This section previously contained conda initialization code
+
+# PATH management
+# Add Homebrew's bin directory and Python to PATH
+if command -v brew &>/dev/null; then
+  # Get the latest available Python version from Homebrew dynamically
+  brew_latest_python_formula=$(brew list --formula | grep -E "^python(@[0-9]+\.[0-9]+)?$" | sort -Vr | head -1)
+
+  if [ -n "$brew_latest_python_formula" ]; then
+    brew_python_path="$(brew --prefix)/opt/$brew_latest_python_formula"
+    if [ -d "$brew_python_path" ]; then
+      # Add Homebrew Python libexec/bin to PATH (for python command)
+      export PATH="$brew_python_path/libexec/bin:$brew_python_path/bin:$PATH"
+    fi
+  fi
+
+  # Add Homebrew's bin directory to PATH (for uv and other tools)
+  export PATH="$(brew --prefix)/bin:$PATH"
+fi
+
+# Add user's bin directory to PATH for custom commands
+export PATH="$HOME/bin:$PATH"
+
+# Space for package-managed additions below this line
+# -----------------------------------------------------
+# The following sections might be updated by package installers
+
+# pnpm
+export PNPM_HOME="/Users/ericbuess/Library/pnpm"
+case ":$PATH:" in
+  *":$PNPM_HOME:"*) ;;
+  *) export PATH="$PNPM_HOME:$PATH" ;;
+esac
+# pnpm end
+
+# UV configuration for virtual environments
+# To create a virtual environment: uv venv <env_name>
+# To activate: source <env_name>/bin/activate
+# Added by Windsurf
+export PATH="/Users/ericbuess/.codeium/windsurf/bin:$PATH"
+
+# Claude Code Session Tracker
+export PATH="$HOME/.claude-code-session-tracker/bin:$PATH"
+
+# VM connection with clipboard bridge support
+vm() {
+    local session="${1:-main}"
+    echo "🔗 Connecting to VM with clipboard bridge..."
+    # Set up reverse tunnel for vm-bridge
+    mosh ericbuess@10.211.55.4 \
+        --ssh="ssh -R 9999:localhost:9999" \
+        -- tmux new-session -A -s "$session"
+}
