@@ -42,6 +42,18 @@ check_sensitive() {
             echo "  ⚠️  SKIPPING (sensitive name): $file"
             return 1
             ;;
+        *history|.bash_history|.zsh_history|.python_history|.node_repl_history)
+            echo "  ⚠️  SKIPPING (history file): $file"
+            return 1
+            ;;
+        .lesshst|.viminfo|.wget-hsts|.recently-used*)
+            echo "  ⚠️  SKIPPING (usage tracking): $file"
+            return 1
+            ;;
+        known_hosts|authorized_keys)
+            echo "  ⚠️  SKIPPING (SSH file): $file"
+            return 1
+            ;;
     esac
     
     # For text files, check content
@@ -85,6 +97,14 @@ safe_copy() {
                 --exclude=".env.*" \
                 --exclude="*secret*" \
                 --exclude="*token*" \
+                --exclude="*history" \
+                --exclude=".*_history" \
+                --exclude=".viminfo" \
+                --exclude=".lesshst" \
+                --exclude="known_hosts" \
+                --exclude="authorized_keys" \
+                --exclude="*.log" \
+                --exclude="*.cache" \
                 "$src/" "$dest/"
         else
             echo "  Copying file: $src"
