@@ -8,6 +8,12 @@
 *.pem
 id_rsa*
 id_ed25519*
+known_hosts
+authorized_keys
+.ssh/
+**/ssh/id_*
+**/ssh/known_hosts
+**/ssh/authorized_keys
 
 # Cache and temporary files
 *.cache

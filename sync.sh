@@ -1,89 +1,117 @@
 #!/bin/bash
-# sync.sh - Bidirectional sync for Eric's Claude Setup
-# Detects OS and syncs configs between system and repo
 
-set -e
-
-REPO_DIR="$(cd "$(dirname "$0")" && pwd)"
-MODE=${1:-status}
-
-# Colors for output
-RED='\033[0;31m'
-GREEN='\033[0;32m'
-YELLOW='\033[1;33m'
-NC='\033[0m' # No Color
-
-# Detect OS
+# Detect OS and set target directory
 case "$(uname -s)" in
     Darwin*)
-        OS="mac"
+        OS_DIR="macos"
         SHELL_RC=".zshrc"
-        SHELL_NAME="zsh"
+        SHELL_PROFILE=".zprofile"
         ;;
     Linux*)
-        OS="linux"
+        OS_DIR="ubuntu"
         SHELL_RC=".bashrc"
-        SHELL_NAME="bash"
+        SHELL_PROFILE=".bash_profile"
         ;;
     *)
-        echo -e "${RED}Unknown OS: $(uname -s)${NC}"
+        echo "Unknown OS: $(uname -s)"
         exit 1
         ;;
 esac
 
-# Configuration mapping
-# Format: ["system_path"]="repo_path"
-declare -A CONFIG_MAP=(
-    ["$SHELL_RC"]="configs/$OS/shell-rc"
-    [".tmux.conf"]="configs/shared/tmux.conf"
-    [".vimrc"]="configs/shared/vimrc"
-    [".claude/hooks"]="configs/shared/claude-hooks"
-    [".claude/settings.json"]="configs/$OS/claude-settings.json"
-    [".config/nvim"]="configs/shared/nvim"
-)
+REPO_DIR="$(cd "$(dirname "$0")" && pwd)"
+TARGET_DIR="$REPO_DIR/$OS_DIR"
+MODE=${1:-status}
 
-echo -e "${GREEN}=== Eric's Claude Setup Sync ===${NC}"
-echo "OS: $OS ($(uname -s))"
-echo "Shell: $SHELL_NAME"
-echo "Mode: $MODE"
-echo ""
+echo "OS: $OS_DIR | Mode: $MODE | Target: $TARGET_DIR"
+
+# Function to safely copy files
+safe_copy() {
+    local src="$1"
+    local dest="$2"
+    
+    if [[ -e "$src" ]]; then
+        mkdir -p "$(dirname "$dest")"
+        if [[ -d "$src" ]]; then
+            echo "  Copying directory: $src"
+            rsync -a --delete "$src/" "$dest/"
+        else
+            echo "  Copying file: $src"
+            cp "$src" "$dest"
+        fi
+        return 0
+    else
+        echo "  Skipping (not found): $src"
+        return 1
+    fi
+}
+
+# Function to check differences
+check_diff() {
+    local src="$1"
+    local dest="$2"
+    
+    if [[ ! -e "$src" ]]; then
+        echo "  ✗ Missing: $src"
+        return 1
+    elif [[ ! -e "$dest" ]]; then
+        echo "  + New: $src"
+        return 0
+    elif diff -q "$src" "$dest" > /dev/null 2>&1; then
+        echo "  ✓ In sync: $src"
+        return 0
+    else
+        echo "  ≠ Modified: $src"
+        return 0
+    fi
+}
 
 case $MODE in
     push)
-        echo -e "${YELLOW}Copying from system to repo...${NC}"
-        
-        for src in "${!CONFIG_MAP[@]}"; do
-            dest="${CONFIG_MAP[$src]}"
-            src_path="$HOME/$src"
-            dest_path="$REPO_DIR/$dest"
-            
-            if [[ -e "$src_path" ]]; then
-                mkdir -p "$(dirname "$dest_path")"
-                if [[ -d "$src_path" ]]; then
-                    # For directories, use rsync
-                    rsync -av --delete "$src_path/" "$dest_path/" > /dev/null 2>&1
-                else
-                    # For files, use cp
-                    cp "$src_path" "$dest_path"
-                fi
-                echo -e "${GREEN}✓${NC} $src → $dest"
-            else
-                echo -e "${YELLOW}⚠${NC}  $src not found (skipping)"
-            fi
-        done
-        
+        echo "Pushing configs from home to repository..."
         echo ""
-        echo "Ready to commit changes:"
-        cd "$REPO_DIR"
-        git add -A
-        git status --short
-        echo ""
-        echo -e "${GREEN}Run: git commit -m 'Sync from $OS: $(date +%Y-%m-%d)'${NC}"
+        
+        # Shell configs
+        echo "Shell configs:"
+        safe_copy "$HOME/$SHELL_RC" "$TARGET_DIR/shell/rc"
+        safe_copy "$HOME/$SHELL_PROFILE" "$TARGET_DIR/shell/profile"
+        safe_copy "$HOME/.aliases" "$TARGET_DIR/shell/aliases"
+        
+        # Tmux
+        echo -e "\nTmux:"
+        safe_copy "$HOME/.tmux.conf" "$TARGET_DIR/tmux/tmux.conf"
+        
+        # Claude
+        echo -e "\nClaude:"
+        safe_copy "$HOME/.claude/settings.json" "$TARGET_DIR/claude/settings.json"
+        if [[ -d "$HOME/.claude/hooks" ]]; then
+            safe_copy "$HOME/.claude/hooks" "$TARGET_DIR/claude/hooks"
+        fi
+        
+        # Neovim
+        echo -e "\nNeovim:"
+        if [[ -d "$HOME/.config/nvim" ]]; then
+            safe_copy "$HOME/.config/nvim" "$TARGET_DIR/nvim"
+        fi
+        
+        # Vim
+        echo -e "\nVim:"
+        safe_copy "$HOME/.vimrc" "$TARGET_DIR/vim/vimrc"
+        
+        # Git
+        echo -e "\nGit:"
+        safe_copy "$HOME/.gitconfig" "$TARGET_DIR/git/gitconfig"
+        safe_copy "$HOME/.gitignore_global" "$TARGET_DIR/git/gitignore_global"
+        
+        # SSH (config only, no keys)
+        echo -e "\nSSH:"
+        safe_copy "$HOME/.ssh/config" "$TARGET_DIR/ssh/config"
+        
+        echo -e "\n✅ Push complete!"
         ;;
         
     pull)
-        echo -e "${YELLOW}Copying from repo to system...${NC}"
-        echo -e "${RED}⚠ WARNING: This will overwrite your local configs!${NC}"
+        echo "Pulling configs from repository to home..."
+        echo "⚠️  This will overwrite your local configs!"
         read -p "Continue? (y/N) " -n 1 -r
         echo
         if [[ ! $REPLY =~ ^[Yy]$ ]]; then
@@ -91,76 +119,95 @@ case $MODE in
             exit 1
         fi
         
-        for src in "${!CONFIG_MAP[@]}"; do
-            dest="$HOME/$src"
-            src_path="$REPO_DIR/${CONFIG_MAP[$src]}"
-            
-            if [[ -e "$src_path" ]]; then
-                mkdir -p "$(dirname "$dest")"
-                if [[ -d "$src_path" ]]; then
-                    # For directories, use rsync
-                    rsync -av "$src_path/" "$dest/" > /dev/null 2>&1
-                else
-                    # For files, use cp
-                    cp "$src_path" "$dest"
-                fi
-                echo -e "${GREEN}✓${NC} $src restored"
-            else
-                echo -e "${YELLOW}⚠${NC}  $src not in repo (skipping)"
-            fi
-        done
+        echo ""
+        
+        # Shell configs
+        echo "Shell configs:"
+        safe_copy "$TARGET_DIR/shell/rc" "$HOME/$SHELL_RC"
+        safe_copy "$TARGET_DIR/shell/profile" "$HOME/$SHELL_PROFILE"
+        safe_copy "$TARGET_DIR/shell/aliases" "$HOME/.aliases"
+        
+        # Tmux
+        echo -e "\nTmux:"
+        safe_copy "$TARGET_DIR/tmux/tmux.conf" "$HOME/.tmux.conf"
+        
+        # Claude
+        echo -e "\nClaude:"
+        mkdir -p "$HOME/.claude"
+        safe_copy "$TARGET_DIR/claude/settings.json" "$HOME/.claude/settings.json"
+        if [[ -d "$TARGET_DIR/claude/hooks" ]]; then
+            safe_copy "$TARGET_DIR/claude/hooks" "$HOME/.claude/hooks"
+        fi
+        
+        # Neovim
+        echo -e "\nNeovim:"
+        if [[ -d "$TARGET_DIR/nvim" ]]; then
+            mkdir -p "$HOME/.config"
+            safe_copy "$TARGET_DIR/nvim" "$HOME/.config/nvim"
+        fi
+        
+        # Vim
+        echo -e "\nVim:"
+        safe_copy "$TARGET_DIR/vim/vimrc" "$HOME/.vimrc"
+        
+        # Git
+        echo -e "\nGit:"
+        safe_copy "$TARGET_DIR/git/gitconfig" "$HOME/.gitconfig"
+        safe_copy "$TARGET_DIR/git/gitignore_global" "$HOME/.gitignore_global"
+        
+        # SSH
+        echo -e "\nSSH:"
+        mkdir -p "$HOME/.ssh"
+        safe_copy "$TARGET_DIR/ssh/config" "$HOME/.ssh/config"
+        chmod 600 "$HOME/.ssh/config" 2>/dev/null || true
+        
+        echo -e "\n✅ Pull complete!"
         ;;
         
-    status)
-        echo -e "${YELLOW}Checking sync status...${NC}"
+    status|*)
+        echo "Checking sync status..."
+        echo ""
         
-        for src in "${!CONFIG_MAP[@]}"; do
-            dest="${CONFIG_MAP[$src]}"
-            src_path="$HOME/$src"
-            dest_path="$REPO_DIR/$dest"
-            
-            if [[ -e "$src_path" ]] && [[ -e "$dest_path" ]]; then
-                if [[ -d "$src_path" ]]; then
-                    # For directories, check with diff
-                    if diff -qr "$src_path" "$dest_path" > /dev/null 2>&1; then
-                        echo -e "${GREEN}✓${NC} $src is in sync"
-                    else
-                        echo -e "${RED}✗${NC} $src differs from repo"
-                    fi
-                else
-                    # For files
-                    if diff -q "$src_path" "$dest_path" > /dev/null 2>&1; then
-                        echo -e "${GREEN}✓${NC} $src is in sync"
-                    else
-                        echo -e "${RED}✗${NC} $src differs from repo"
-                    fi
-                fi
-            elif [[ -e "$src_path" ]]; then
-                echo -e "${YELLOW}+${NC} $src exists locally only"
-            elif [[ -e "$dest_path" ]]; then
-                echo -e "${YELLOW}-${NC} $src exists in repo only"
-            else
-                echo -e "${YELLOW}⚠${NC}  $src not found anywhere"
-            fi
-        done
+        # Shell configs
+        echo "Shell configs:"
+        check_diff "$HOME/$SHELL_RC" "$TARGET_DIR/shell/rc"
+        check_diff "$HOME/$SHELL_PROFILE" "$TARGET_DIR/shell/profile"
+        check_diff "$HOME/.aliases" "$TARGET_DIR/shell/aliases"
+        
+        # Tmux
+        echo -e "\nTmux:"
+        check_diff "$HOME/.tmux.conf" "$TARGET_DIR/tmux/tmux.conf"
+        
+        # Claude
+        echo -e "\nClaude:"
+        check_diff "$HOME/.claude/settings.json" "$TARGET_DIR/claude/settings.json"
+        if [[ -d "$HOME/.claude/hooks" ]]; then
+            check_diff "$HOME/.claude/hooks" "$TARGET_DIR/claude/hooks"
+        fi
+        
+        # Neovim
+        echo -e "\nNeovim:"
+        if [[ -d "$HOME/.config/nvim" ]]; then
+            check_diff "$HOME/.config/nvim" "$TARGET_DIR/nvim"
+        fi
+        
+        # Vim
+        echo -e "\nVim:"
+        check_diff "$HOME/.vimrc" "$TARGET_DIR/vim/vimrc"
+        
+        # Git
+        echo -e "\nGit:"
+        check_diff "$HOME/.gitconfig" "$TARGET_DIR/git/gitconfig"
+        check_diff "$HOME/.gitignore_global" "$TARGET_DIR/git/gitignore_global"
+        
+        # SSH
+        echo -e "\nSSH:"
+        check_diff "$HOME/.ssh/config" "$TARGET_DIR/ssh/config"
         
         echo ""
-        echo "Use './sync.sh push' to save changes to repo"
-        echo "Use './sync.sh pull' to restore from repo"
-        ;;
-        
-    help|*)
-        echo "Usage: $0 [command]"
-        echo ""
-        echo "Commands:"
-        echo "  status  - Show sync status (default)"
-        echo "  push    - Copy configs from system to repo"
-        echo "  pull    - Copy configs from repo to system"
-        echo "  help    - Show this help message"
-        echo ""
-        echo "Examples:"
-        echo "  $0          # Check what's out of sync"
-        echo "  $0 push     # Save current configs to repo"
-        echo "  $0 pull     # Restore configs from repo"
+        echo "Usage:"
+        echo "  $0 status  - Check sync status (default)"
+        echo "  $0 push    - Push configs from home to repo"
+        echo "  $0 pull    - Pull configs from repo to home"
         ;;
 esac

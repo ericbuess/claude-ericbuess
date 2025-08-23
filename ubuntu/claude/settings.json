@@ -1,0 +1,58 @@
+{
+  "$schema": "https://json.schemastore.org/claude-code-settings.json",
+  "model": "opus",
+  "hooks": {
+    "PreCompact": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "python3 ~/.claude-code-ericbuess/.claude/hooks/precompact-auto-context.py",
+            "description": "Auto-generate CONTEXT_STATE.md before compact"
+          }
+        ]
+      }
+    ],
+    "PreToolUse": [
+      {
+        "matcher": "Read",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "~/.claude-code-docs/claude-docs-helper.sh hook-check"
+          }
+        ]
+      }
+    ],
+    "UserPromptSubmit": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "/home/ericbuess/.claude-code-project-index/scripts/run_python.sh /home/ericbuess/.claude-code-project-index/scripts/i_flag_hook.py",
+            "timeout": 20
+          }
+        ]
+      }
+    ],
+    "Stop": [
+      {
+        "matcher": "",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "/home/ericbuess/.claude-code-project-index/scripts/run_python.sh /home/ericbuess/.claude-code-project-index/scripts/stop_hook.py",
+            "timeout": 10
+          }
+        ]
+      }
+    ]
+  },
+  "statusLine": {
+    "type": "command",
+    "command": "/home/ericbuess/.claude-code-ericbuess/statusline/scripts/statusline-ultra.sh"
+  },
+  "feedbackSurveyState": {
+    "lastShownTime": 1754079365095
+  }
+}

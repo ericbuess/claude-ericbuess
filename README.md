@@ -34,13 +34,43 @@ This repository is like walking into my garage and seeing my tools laid out on t
 
 **Take ideas, not code.**
 
-## Structure
+## Repository Structure
 
-- `configs/` - Platform-specific and shared configurations
-- `tools/` - Personal scripts and utilities
-- `projects/` - Links to active projects
-- `docs/` - Video transcripts and examples
-- `sync.sh` - How I sync between Mac and Linux
+```
+.
+├── macos/          # macOS configurations
+│   ├── claude/     # Claude CLI settings and hooks
+│   ├── shell/      # Zsh configuration
+│   ├── tmux/       # Terminal multiplexer
+│   ├── nvim/       # Neovim setup
+│   └── git/        # Git configuration
+│
+├── ubuntu/         # Ubuntu/Linux configurations
+│   ├── claude/     # Claude CLI settings and hooks
+│   ├── shell/      # Bash configuration
+│   ├── tmux/       # Terminal multiplexer
+│   ├── nvim/       # Neovim setup
+│   └── git/        # Git configuration
+│
+└── sync.sh         # Sync script for managing configs
+```
+
+### How sync.sh Works
+
+The `sync.sh` script manages configs between your home directory and this repository:
+
+```bash
+./sync.sh status  # Check what's different
+./sync.sh push    # Push configs from ~ to repo
+./sync.sh pull    # Pull configs from repo to ~
+```
+
+## Related Projects
+
+My other tools that complement this setup:
+
+- **[claude-code-project-index](https://github.com/ericbuess/claude-code-project-index)** - Tool for indexing codebases for Claude context
+- **[vm-bridge](https://github.com/ericbuess/vm-bridge)** - VM-to-host communication utilities
 
 ## For Video Viewers
 
