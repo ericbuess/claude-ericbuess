@@ -182,41 +182,6 @@ case $MODE in
         echo -e "\n✅ Push complete!"
         ;;
         
-    pull)
-        echo "Pulling configs from repository to home..."
-        echo "⚠️  This will overwrite your local configs!"
-        read -p "Continue? (y/N) " -n 1 -r
-        echo
-        if [[ ! $REPLY =~ ^[Yy]$ ]]; then
-            echo "Aborted."
-            exit 1
-        fi
-        
-        echo ""
-        
-        for config in "${SYNC_CONFIGS[@]}"; do
-            IFS=':' read -r src dest os_filter <<< "$config"
-            
-            # Skip if OS doesn't match filter
-            if [[ "$os_filter" != "all" ]] && [[ "$os_filter" != "$OS_DIR" ]]; then
-                continue
-            fi
-            
-            # Create parent directories if needed
-            parent_dir="$(dirname "$HOME/$src")"
-            [[ ! -d "$parent_dir" ]] && mkdir -p "$parent_dir"
-            
-            safe_copy "$TARGET_DIR/$dest" "$HOME/$src"
-            
-            # Special handling for SSH config permissions
-            if [[ "$src" == ".ssh/config" ]] && [[ -f "$HOME/$src" ]]; then
-                chmod 600 "$HOME/$src"
-            fi
-        done
-        
-        echo -e "\n✅ Pull complete!"
-        ;;
-        
     status|*)
         echo "Checking sync status..."
         echo ""
@@ -236,7 +201,9 @@ case $MODE in
         echo "Usage:"
         echo "  $0 status  - Check sync status (default)"
         echo "  $0 push    - Push configs from home to repo"
-        echo "  $0 pull    - Pull configs from repo to home"
+        echo ""
+        echo "Note: This is a reference repository for learning."
+        echo "Users should adapt these configs to their own needs, not copy directly."
         echo ""
         echo "To add new configs, edit SYNC_CONFIGS array in this script"
         ;;
