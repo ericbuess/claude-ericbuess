@@ -39,10 +39,14 @@ The `sync.sh` script manages configurations between your home directory and this
 ### Commands
 
 ```bash
-./sync.sh status    # Check sync status (default)
-./sync.sh push      # Push configs from home to repo
-./sync.sh pull      # Pull configs from repo to home
+git pull                # ALWAYS pull latest changes first
+./sync.sh status        # Check sync status (default)
+./sync.sh push          # Push configs from home to repo
+./sync.sh pull          # Pull configs from repo to home
+git add -A && git commit -m "message" && git push  # Commit changes
 ```
+
+**Important:** Always run `git pull` before using `sync.sh push` to avoid conflicts with changes from other systems.
 
 ### What Gets Synced
 
