@@ -84,21 +84,21 @@ unalias vm 2>/dev/null
 
 # VM connection settings
 VM_HOST="ericbuess@10.211.55.4"
-MOSH_SSH_OPTS="-o StrictHostKeyChecking=accept-new -o BatchMode=yes"
+SSH_OPTS="-o StrictHostKeyChecking=no -o BatchMode=yes"
 MOSH_BIN="$(command -v mosh || true)"
 
 # SSH into the VM (works better with Claude scrolling)
 vm() {
-    ssh $MOSH_SSH_OPTS -R 9999:localhost:9999 "$VM_HOST" "$@"
+    ssh -o StrictHostKeyChecking=no -o BatchMode=yes -R 9999:localhost:9999 "$VM_HOST" "$@"
 }
 
 # Plain mosh into the VM (no tmux) - has scrolling issues with Claude
 vmm() {
     if [ -n "$MOSH_BIN" ]; then
-        mosh --ssh="ssh $MOSH_SSH_OPTS -R 9999:localhost:9999" "$VM_HOST" -- "$@"
+        mosh --ssh="ssh $SSH_OPTS -R 9999:localhost:9999" "$VM_HOST" -- "$@"
     else
         echo "mosh not found; falling back to ssh"
-        ssh $MOSH_SSH_OPTS -R 9999:localhost:9999 "$VM_HOST" "$@"
+        ssh $SSH_OPTS -R 9999:localhost:9999 "$VM_HOST" "$@"
     fi
 }
 
@@ -107,10 +107,10 @@ vmt() {
     local session="${1:-main}"
     shift || true
     if [ -n "$MOSH_BIN" ]; then
-        mosh --ssh="ssh $MOSH_SSH_OPTS -R 9999:localhost:9999" "$VM_HOST" -- tmux new-session -A -s "$session" "$@"
+        mosh --ssh="ssh $SSH_OPTS -R 9999:localhost:9999" "$VM_HOST" -- tmux new-session -A -s "$session" "$@"
     else
         echo "mosh not found; falling back to ssh"
-        ssh $MOSH_SSH_OPTS -R 9999:localhost:9999 "$VM_HOST" "tmux new-session -A -s '$session' $*"
+        ssh $SSH_OPTS -R 9999:localhost:9999 "$VM_HOST" "tmux new-session -A -s '$session' $*"
     fi
 }
 
