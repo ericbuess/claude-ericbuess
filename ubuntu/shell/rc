@@ -142,7 +142,20 @@ set_title() { echo -ne "\033]0;$1\007"; }
 
 # VibeTunnel aliases
 
-alias c='claude --dangerously-skip-permissions'
+# Claude CLI with mouse scrolling fix for non-tmux sessions
+# Disables mouse tracking that interferes with terminal scrolling
+claude_wrapper() {
+    if [ -z "$TMUX" ]; then
+        # Disable all mouse tracking modes before running claude
+        printf '\033[?1000l\033[?1002l\033[?1003l\033[?1005l\033[?1006l\033[?1015l' 2>/dev/null
+    fi
+    command claude --dangerously-skip-permissions "$@"
+    if [ -z "$TMUX" ]; then
+        # Re-disable mouse tracking after claude exits (in case it enabled it)
+        printf '\033[?1000l\033[?1002l\033[?1003l\033[?1005l\033[?1006l\033[?1015l' 2>/dev/null
+    fi
+}
+alias c='claude_wrapper'
 alias vibetunnel="cd /home/ericbuess/Projects/vt/vibetunnel/web && pnpm run dev"
 
 [ -f ~/.claude-code-ericbuess/aliases/init.sh ] && source ~/.claude-code-ericbuess/aliases/init.sh
