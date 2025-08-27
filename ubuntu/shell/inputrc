@@ -1,0 +1,31 @@
+# Ubuntu .inputrc - fixes mouse scrolling in Claude CLI and other terminals
+# Part of claude-ericbuess configuration
+
+# Enable bracketed paste (was already set)
+set enable-bracketed-paste on
+
+# Disable the PageUp/PageDown history search that interferes with mouse scrolling
+# These bindings cause mouse wheel to navigate command history instead of scrolling
+# Comment these out to restore default behavior if needed
+"\e[5~": ""  # Unbind PageUp (was history-search-backward)
+"\e[6~": ""  # Unbind PageDown (was history-search-forward)
+
+# Alternative: If you want to keep history search, use different key combos
+# Ctrl+PageUp/PageDown for history search (less likely to conflict)
+"\e[5;5~": history-search-backward
+"\e[6;5~": history-search-forward
+
+# Ensure normal arrow keys still work for history
+"\e[A": previous-history
+"\e[B": next-history
+"\e[C": forward-char
+"\e[D": backward-char
+
+# Enable case-insensitive completion
+set completion-ignore-case on
+
+# Show all completions immediately
+set show-all-if-ambiguous on
+
+# Visual bell instead of audible
+set bell-style visible

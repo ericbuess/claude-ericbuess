@@ -23,6 +23,7 @@ declare -a SYNC_CONFIGS=(
     ".zprofile:shell/profile:macos"
     ".bashrc:shell/rc:ubuntu"
     ".bash_profile:shell/profile:ubuntu"
+    ".inputrc:shell/inputrc:ubuntu"
     ".aliases:shell/aliases:all"
     
     # Development tools
