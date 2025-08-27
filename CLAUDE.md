@@ -90,6 +90,35 @@ claude "Explain the tmux configuration in the ubuntu directory"
 claude "Based on Eric's shell configuration, help me set up similar aliases for my workflow"
 ```
 
+## VM Connection Methods
+
+When connecting from macOS to Ubuntu VM, there are different commands optimized for different use cases:
+
+### Connection Commands
+
+- **`vm`** - SSH connection (best for Claude CLI)
+  - Uses SSH for direct, reliable terminal handling
+  - Mouse scrolling works properly in Claude CLI
+  - Slight latency on poor connections
+  - Port forwards clipboard bridge (port 9999)
+
+- **`vmm`** - Mosh connection (best for poor networks)  
+  - Uses mosh for better latency handling
+  - Survives network interruptions
+  - **Known Issue:** Mouse scrolling shows escape sequences in Claude CLI
+  - Still forwards clipboard bridge
+
+- **`vmt`** - Mosh + tmux (best for persistent sessions)
+  - Combines mosh's network resilience with tmux's session persistence
+  - Sessions survive disconnections
+  - Mouse scrolling works in tmux copy mode
+
+### Why Different Commands?
+
+The scrolling issue with Claude CLI over mosh is a fundamental limitation: mosh's terminal emulation layer converts mouse scroll events to PageUp/PageDown keys, which Claude CLI's Node.js readline doesn't handle properly. This results in escape sequences (`[?1000l[?1002l`) appearing instead of scrolling. SSH passes mouse events directly, avoiding this issue.
+
+**Recommendation:** Use `vm` (SSH) for Claude CLI work, `vmt` (mosh+tmux) for long-running tasks, and `vmm` (plain mosh) only when network conditions require it.
+
 ## Related Projects
 
 - **[claude-code-project-index](https://github.com/ericbuess/claude-code-project-index)** - Indexes codebases for Claude context
