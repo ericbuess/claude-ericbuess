@@ -1,123 +1,53 @@
-# Claude Code Ultra StatusLine
+# Simple Claude Statusline
 
-A comprehensive two-line statusline for Claude Code with real-time metrics, cost tracking, and environment awareness.
+A dead-simple statusline for Claude Code CLI that uses git-based session tracking.
 
-## Features
+## How It Works
 
-### Core Display
-- **Model Indicator**: Shows which Claude model you're using (🧠 Opus, ⚡ Sonnet, 💨 Haiku)
-- **User@Host:Directory**: Standard terminal-style location display
-- **Session Tracking**: Color-coded session count (🟢 <35, 🟡 35-45, 🔴 >45)
-- **Time Remaining**: Shows time left in current 5-hour session block
-- **Token Usage**: Displays tokens used in current session
+1. **No cache, no cron, no complexity**
+2. Session data stored in `~/.claude-ericbuess/session-data.json`
+3. Automatically runs `ccusage` only when needed:
+   - First interaction in a new 5-hour session
+   - When remaining time hits 0
+4. Data synced via git between machines
 
-### Smart Enhancements
-- **Git Integration**: Shows current branch and change indicators
-- **Project Type Detection**: Automatically detects project type (📦 JS, 🐍 Python, 🦀 Rust, etc.)
-- **Memory Status**: Shows 📝 when CLAUDE.md is present
-- **Permission Mode**: Displays current permission mode (✅ accept, 📋 plan)
+## What It Shows
 
-## Installation
-
-The statusline is already installed at:
 ```
-~/.claude-code-ericbuess/statusline/
+user@host:dir | 🟢 14/50 ⏳ 3h41m 📊 1.7M 🌿 branch*
 ```
 
-### Components
-- `scripts/statusline-enhanced.sh` - Main statusline display script
-- `scripts/cache-updater.sh` - Updates session metrics cache
-- `cache/session-status.json` - Cached session data
+- Session count with color coding (🟢 green, 🟡 yellow, 🔴 red)
+- Time remaining in current session
+- Tokens used (if available)
+- Git branch and changes
 
-### Cron Job
-A cron job updates the cache every minute:
-```bash
-* * * * * /home/ericbuess/.claude-code-community-tools/statusline/scripts/cache-updater.sh
-```
+## Setup
 
-## Example Output
-
-### Ultra StatusLine (Two Lines)
-```
-[🧠 Opus] user@host:~/Projects/app 📦 📝 | 🟢 22/50 | ⏳ 4h47m | 📊 1.2M | 🌿 main
-░░░░░░░░░░ 4% | 💰 $3.49 | 🔥 396K/min | 📝 Context: 15% | 🐍 venv | Today: 2s/$8.50
-```
-
-### Line 1 Components:
-- `[🧠 Opus]` - Model indicator (🧠 Opus, ⚡ Sonnet, 💨 Haiku)
-- `user@host:~/Projects/app` - Location with ~/ relative paths
-- `📦` - Project type (📦 JS, 🐍 Python, 🦀 Rust, 🐹 Go)
-- `📝` - CLAUDE.md present
-- `🟢 22/50` - Session count (🟢 <35, 🟡 35-45, 🔴 >45)
-- `⏳ 4h47m` - Time remaining (⏳ >2h, ⏱️ 30m-2h, ⏰ <30m)
-- `📊 1.2M` - Tokens used this session
-- `🌿 main` - Git branch (yellow * if changes)
-
-### Line 2 Components:
-- `░░░░░░░░░░ 4%` - Visual progress bar for 5-hour session
-- `💰 $3.49` - Current session cost
-- `🔥 396K/min` - Token burn rate (🔥 if >1M/min)
-- `📝 Context: 15%` - Context window usage (⚠️ if >80%)
-- `🐍 venv` - Python virtual environment
-- `🐳 3` - Docker containers running
-- `Today: 2s/$8.50` - Daily sessions and cost
-- `Next: 3h45m` - Time until next session (when current ends)
-- `🔄 Compact soon!` - Auto-compact warning
-
-## Switching Between Versions
-
-### Use Ultra Version (Two Lines - All Features)
-```bash
-# Edit ~/.claude/settings.json
+1. Script is at: `~/.claude-code-ericbuess/statusline/scripts/statusline.sh`
+2. Configured in `~/.claude/settings.json`:
+```json
 "statusLine": {
-  "type": "command",
-  "command": "/home/ericbuess/.claude-code-community-tools/statusline/scripts/statusline-ultra.sh"
+  "type": "command", 
+  "command": "/Users/ericbuess/.claude-code-ericbuess/statusline/scripts/statusline.sh"
 }
 ```
 
-### Use Enhanced Version (Single Line)
+## Multi-Machine Sync
+
+The session data at `~/.claude-ericbuess/session-data.json` is a git repo.
+To sync between machines:
+
 ```bash
-# Edit ~/.claude/settings.json
-"statusLine": {
-  "type": "command",
-  "command": "/home/ericbuess/.claude-code-community-tools/statusline/scripts/statusline-enhanced.sh"
-}
+cd ~/.claude-ericbuess
+git remote add origin <your-repo>
+git push -u origin main
 ```
 
-### Use Basic Version (Minimal)
-```bash
-# Edit ~/.claude/settings.json
-"statusLine": {
-  "type": "command",
-  "command": "/home/ericbuess/.claude-code-community-tools/statusline/scripts/statusline.sh"
-}
-```
+Then on other machines, it will auto-pull before reading.
 
-## Performance
+## Notes
 
-- Git operations are cached for 30 seconds
-- Session data is cached for 1 minute
-- Cache staleness threshold: 2 minutes
-- Automatic cleanup of old cache files
-
-## Troubleshooting
-
-### StatusLine Not Updating
-1. Check cron job: `crontab -l`
-2. Manually update cache: `/home/ericbuess/.claude-code-community-tools/statusline/scripts/cache-updater.sh`
-3. Verify cache: `cat ~/.claude-code-ericbuess/statusline/cache/session-status.json`
-
-### Missing Features
-- Ensure `jq` is installed: `which jq`
-- Check npm/npx availability: `which npx`
-- Verify git installation: `which git`
-
-## Customization
-
-Edit the scripts in `~/.claude-code-ericbuess/statusline/scripts/` to customize:
-- Color schemes
-- Information displayed
-- Icon choices
-- Threshold values
-
-Remember to restart Claude Code after making changes to see updates.
+- Context usage detection removed (too complex to get current session file)
+- No background processes needed
+- Updates only when starting a new session
