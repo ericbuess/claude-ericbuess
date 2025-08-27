@@ -6,9 +6,9 @@ set enable-bracketed-paste on
 
 # Disable the PageUp/PageDown history search that interferes with mouse scrolling
 # These bindings cause mouse wheel to navigate command history instead of scrolling
-# Comment these out to restore default behavior if needed
-"\e[5~": ""  # Unbind PageUp (was history-search-backward)
-"\e[6~": ""  # Unbind PageDown (was history-search-forward)
+# Binding to 'redraw-current-line' effectively makes them no-ops
+"\e[5~": redraw-current-line  # PageUp - no-op instead of history-search-backward
+"\e[6~": redraw-current-line  # PageDown - no-op instead of history-search-forward
 
 # Alternative: If you want to keep history search, use different key combos
 # Ctrl+PageUp/PageDown for history search (less likely to conflict)
