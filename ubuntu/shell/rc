@@ -142,20 +142,7 @@ set_title() { echo -ne "\033]0;$1\007"; }
 
 # VibeTunnel aliases
 
-# Claude CLI with mouse scrolling fix for non-tmux sessions
-# Disables mouse tracking that interferes with terminal scrolling
-claude_wrapper() {
-    if [ -z "$TMUX" ]; then
-        # Disable all mouse tracking modes before running claude
-        printf '\033[?1000l\033[?1002l\033[?1003l\033[?1005l\033[?1006l\033[?1015l' 2>/dev/null
-    fi
-    command claude --dangerously-skip-permissions "$@"
-    if [ -z "$TMUX" ]; then
-        # Re-disable mouse tracking after claude exits (in case it enabled it)
-        printf '\033[?1000l\033[?1002l\033[?1003l\033[?1005l\033[?1006l\033[?1015l' 2>/dev/null
-    fi
-}
-alias c='claude_wrapper'
+alias c='claude --dangerously-skip-permissions'
 alias vibetunnel="cd /home/ericbuess/Projects/vt/vibetunnel/web && pnpm run dev"
 
 [ -f ~/.claude-code-ericbuess/aliases/init.sh ] && source ~/.claude-code-ericbuess/aliases/init.sh
@@ -200,10 +187,11 @@ export UV_PYTHON_VERSION=3.13
 alias wp="~/bin/watch-project"
 alias watch-project="~/bin/watch-project"
 
-# Auto-restore tmux sessions if empty (added by terminal-dev-environment)
-if command -v tmux &>/dev/null && [ -z "$TMUX" ]; then
-    # Only run if we're in an interactive shell and tmux is available
-    if [ -t 0 ] && [ -x ~/tmux-smart-restore.sh ]; then
-        ~/tmux-smart-restore.sh
-    fi
-fi
+# DISABLED: Auto-restore was interfering with terminal scrolling
+# # Auto-restore tmux sessions if empty (added by terminal-dev-environment)
+# if command -v tmux &>/dev/null && [ -z "$TMUX" ]; then
+#     # Only run if we're in an interactive shell and tmux is available
+#     if [ -t 0 ] && [ -x ~/tmux-smart-restore.sh ]; then
+#         ~/tmux-smart-restore.sh
+#     fi
+# fi
