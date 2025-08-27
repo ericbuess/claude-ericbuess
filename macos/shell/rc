@@ -281,13 +281,3 @@ export PATH="/Users/ericbuess/.codeium/windsurf/bin:$PATH"
 
 # Claude Code Session Tracker
 export PATH="$HOME/.claude-code-session-tracker/bin:$PATH"
-
-# VM connection with clipboard bridge support
-vm() {
-    local session="${1:-main}"
-    echo "🔗 Connecting to VM with clipboard bridge..."
-    # Set up reverse tunnel for vm-bridge
-    mosh ericbuess@10.211.55.4 \
-        --ssh="ssh -R 9999:localhost:9999" \
-        -- tmux new-session -A -s "$session"
-}
