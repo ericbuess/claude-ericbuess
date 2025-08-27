@@ -87,8 +87,13 @@ VM_HOST="ericbuess@10.211.55.4"
 MOSH_SSH_OPTS="-o StrictHostKeyChecking=accept-new -o BatchMode=yes"
 MOSH_BIN="$(command -v mosh || true)"
 
-# Plain mosh into the VM (no tmux)
+# SSH into the VM (works better with Claude scrolling)
 vm() {
+    ssh $MOSH_SSH_OPTS -R 9999:localhost:9999 "$VM_HOST" "$@"
+}
+
+# Plain mosh into the VM (no tmux) - has scrolling issues with Claude
+vmm() {
     if [ -n "$MOSH_BIN" ]; then
         mosh --ssh="ssh $MOSH_SSH_OPTS -R 9999:localhost:9999" "$VM_HOST" -- "$@"
     else
