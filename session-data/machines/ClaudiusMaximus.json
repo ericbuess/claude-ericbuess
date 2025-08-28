@@ -1,0 +1,613 @@
+{
+  "blocks": [
+    {
+      "id": "2025-08-02T05:00:00.000Z",
+      "startTime": "2025-08-02T05:00:00.000Z",
+      "endTime": "2025-08-02T10:00:00.000Z",
+      "actualEndTime": "2025-08-02T05:41:05.907Z",
+      "isActive": false,
+      "isGap": false,
+      "entries": 201,
+      "tokenCounts": {
+        "inputTokens": 1238,
+        "outputTokens": 7879,
+        "cacheCreationInputTokens": 838969,
+        "cacheReadInputTokens": 9152786
+      },
+      "totalTokens": 10000872,
+      "costUSD": 29.939343750000003,
+      "models": [
+        "claude-opus-4-20250514",
+        "claude-sonnet-4-20250514",
+        "<synthetic>"
+      ],
+      "burnRate": null,
+      "projection": null
+    },
+    {
+      "id": "gap-2025-08-02T10:41:05.907Z",
+      "startTime": "2025-08-02T10:41:05.907Z",
+      "endTime": "2025-08-03T21:52:23.011Z",
+      "actualEndTime": null,
+      "isActive": false,
+      "isGap": true,
+      "entries": 0,
+      "tokenCounts": {
+        "inputTokens": 0,
+        "outputTokens": 0,
+        "cacheCreationInputTokens": 0,
+        "cacheReadInputTokens": 0
+      },
+      "totalTokens": 0,
+      "costUSD": 0,
+      "models": [],
+      "burnRate": null,
+      "projection": null
+    },
+    {
+      "id": "2025-08-03T21:00:00.000Z",
+      "startTime": "2025-08-03T21:00:00.000Z",
+      "endTime": "2025-08-04T02:00:00.000Z",
+      "actualEndTime": "2025-08-03T22:38:17.131Z",
+      "isActive": false,
+      "isGap": false,
+      "entries": 79,
+      "tokenCounts": {
+        "inputTokens": 1030,
+        "outputTokens": 3164,
+        "cacheCreationInputTokens": 346594,
+        "cacheReadInputTokens": 7017168
+      },
+      "totalTokens": 7367956,
+      "costUSD": 17.2771395,
+      "models": [
+        "claude-opus-4-20250514"
+      ],
+      "burnRate": null,
+      "projection": null
+    },
+    {
+      "id": "gap-2025-08-04T03:38:17.131Z",
+      "startTime": "2025-08-04T03:38:17.131Z",
+      "endTime": "2025-08-04T16:58:59.608Z",
+      "actualEndTime": null,
+      "isActive": false,
+      "isGap": true,
+      "entries": 0,
+      "tokenCounts": {
+        "inputTokens": 0,
+        "outputTokens": 0,
+        "cacheCreationInputTokens": 0,
+        "cacheReadInputTokens": 0
+      },
+      "totalTokens": 0,
+      "costUSD": 0,
+      "models": [],
+      "burnRate": null,
+      "projection": null
+    },
+    {
+      "id": "2025-08-04T16:00:00.000Z",
+      "startTime": "2025-08-04T16:00:00.000Z",
+      "endTime": "2025-08-04T21:00:00.000Z",
+      "actualEndTime": "2025-08-04T16:59:12.579Z",
+      "isActive": false,
+      "isGap": false,
+      "entries": 2,
+      "tokenCounts": {
+        "inputTokens": 3,
+        "outputTokens": 5,
+        "cacheCreationInputTokens": 15012,
+        "cacheReadInputTokens": 0
+      },
+      "totalTokens": 15020,
+      "costUSD": 0.28189499999999995,
+      "models": [
+        "<synthetic>",
+        "claude-opus-4-20250514"
+      ],
+      "burnRate": null,
+      "projection": null
+    },
+    {
+      "id": "gap-2025-08-04T21:59:12.579Z",
+      "startTime": "2025-08-04T21:59:12.579Z",
+      "endTime": "2025-08-06T19:55:48.914Z",
+      "actualEndTime": null,
+      "isActive": false,
+      "isGap": true,
+      "entries": 0,
+      "tokenCounts": {
+        "inputTokens": 0,
+        "outputTokens": 0,
+        "cacheCreationInputTokens": 0,
+        "cacheReadInputTokens": 0
+      },
+      "totalTokens": 0,
+      "costUSD": 0,
+      "models": [],
+      "burnRate": null,
+      "projection": null
+    },
+    {
+      "id": "2025-08-06T19:00:00.000Z",
+      "startTime": "2025-08-06T19:00:00.000Z",
+      "endTime": "2025-08-07T00:00:00.000Z",
+      "actualEndTime": "2025-08-06T20:04:08.209Z",
+      "isActive": false,
+      "isGap": false,
+      "entries": 18,
+      "tokenCounts": {
+        "inputTokens": 73,
+        "outputTokens": 1072,
+        "cacheCreationInputTokens": 33127,
+        "cacheReadInputTokens": 258484
+      },
+      "totalTokens": 292756,
+      "costUSD": 1.09035225,
+      "models": [
+        "claude-opus-4-1-20250805"
+      ],
+      "burnRate": null,
+      "projection": null
+    },
+    {
+      "id": "gap-2025-08-07T01:04:08.209Z",
+      "startTime": "2025-08-07T01:04:08.209Z",
+      "endTime": "2025-08-12T01:12:00.869Z",
+      "actualEndTime": null,
+      "isActive": false,
+      "isGap": true,
+      "entries": 0,
+      "tokenCounts": {
+        "inputTokens": 0,
+        "outputTokens": 0,
+        "cacheCreationInputTokens": 0,
+        "cacheReadInputTokens": 0
+      },
+      "totalTokens": 0,
+      "costUSD": 0,
+      "models": [],
+      "burnRate": null,
+      "projection": null
+    },
+    {
+      "id": "2025-08-12T01:00:00.000Z",
+      "startTime": "2025-08-12T01:00:00.000Z",
+      "endTime": "2025-08-12T06:00:00.000Z",
+      "actualEndTime": "2025-08-12T01:14:51.255Z",
+      "isActive": false,
+      "isGap": false,
+      "entries": 6,
+      "tokenCounts": {
+        "inputTokens": 31,
+        "outputTokens": 710,
+        "cacheCreationInputTokens": 22304,
+        "cacheReadInputTokens": 96571
+      },
+      "totalTokens": 119616,
+      "costUSD": 0.6167714999999999,
+      "models": [
+        "claude-opus-4-1-20250805"
+      ],
+      "burnRate": null,
+      "projection": null
+    },
+    {
+      "id": "gap-2025-08-12T06:14:51.255Z",
+      "startTime": "2025-08-12T06:14:51.255Z",
+      "endTime": "2025-08-13T20:37:39.238Z",
+      "actualEndTime": null,
+      "isActive": false,
+      "isGap": true,
+      "entries": 0,
+      "tokenCounts": {
+        "inputTokens": 0,
+        "outputTokens": 0,
+        "cacheCreationInputTokens": 0,
+        "cacheReadInputTokens": 0
+      },
+      "totalTokens": 0,
+      "costUSD": 0,
+      "models": [],
+      "burnRate": null,
+      "projection": null
+    },
+    {
+      "id": "2025-08-13T20:00:00.000Z",
+      "startTime": "2025-08-13T20:00:00.000Z",
+      "endTime": "2025-08-14T01:00:00.000Z",
+      "actualEndTime": "2025-08-13T21:45:34.561Z",
+      "isActive": false,
+      "isGap": false,
+      "entries": 6,
+      "tokenCounts": {
+        "inputTokens": 29,
+        "outputTokens": 706,
+        "cacheCreationInputTokens": 76838,
+        "cacheReadInputTokens": 65511
+      },
+      "totalTokens": 143084,
+      "costUSD": 1.592364,
+      "models": [
+        "claude-opus-4-1-20250805"
+      ],
+      "burnRate": null,
+      "projection": null
+    },
+    {
+      "id": "gap-2025-08-14T02:45:34.561Z",
+      "startTime": "2025-08-14T02:45:34.561Z",
+      "endTime": "2025-08-15T20:29:14.329Z",
+      "actualEndTime": null,
+      "isActive": false,
+      "isGap": true,
+      "entries": 0,
+      "tokenCounts": {
+        "inputTokens": 0,
+        "outputTokens": 0,
+        "cacheCreationInputTokens": 0,
+        "cacheReadInputTokens": 0
+      },
+      "totalTokens": 0,
+      "costUSD": 0,
+      "models": [],
+      "burnRate": null,
+      "projection": null
+    },
+    {
+      "id": "2025-08-15T20:00:00.000Z",
+      "startTime": "2025-08-15T20:00:00.000Z",
+      "endTime": "2025-08-16T01:00:00.000Z",
+      "actualEndTime": "2025-08-15T22:03:45.081Z",
+      "isActive": false,
+      "isGap": false,
+      "entries": 4,
+      "tokenCounts": {
+        "inputTokens": 22,
+        "outputTokens": 230,
+        "cacheCreationInputTokens": 41285,
+        "cacheReadInputTokens": 40128
+      },
+      "totalTokens": 81665,
+      "costUSD": 0.8518657499999999,
+      "models": [
+        "claude-opus-4-1-20250805"
+      ],
+      "burnRate": null,
+      "projection": null
+    },
+    {
+      "id": "gap-2025-08-16T03:03:45.081Z",
+      "startTime": "2025-08-16T03:03:45.081Z",
+      "endTime": "2025-08-19T19:02:10.252Z",
+      "actualEndTime": null,
+      "isActive": false,
+      "isGap": true,
+      "entries": 0,
+      "tokenCounts": {
+        "inputTokens": 0,
+        "outputTokens": 0,
+        "cacheCreationInputTokens": 0,
+        "cacheReadInputTokens": 0
+      },
+      "totalTokens": 0,
+      "costUSD": 0,
+      "models": [],
+      "burnRate": null,
+      "projection": null
+    },
+    {
+      "id": "2025-08-19T19:00:00.000Z",
+      "startTime": "2025-08-19T19:00:00.000Z",
+      "endTime": "2025-08-20T00:00:00.000Z",
+      "actualEndTime": "2025-08-19T19:13:24.008Z",
+      "isActive": false,
+      "isGap": false,
+      "entries": 29,
+      "tokenCounts": {
+        "inputTokens": 252,
+        "outputTokens": 99,
+        "cacheCreationInputTokens": 50208,
+        "cacheReadInputTokens": 925609
+      },
+      "totalTokens": 976168,
+      "costUSD": 2.3410185,
+      "models": [
+        "claude-opus-4-1-20250805",
+        "<synthetic>"
+      ],
+      "burnRate": null,
+      "projection": null
+    },
+    {
+      "id": "gap-2025-08-20T00:13:24.008Z",
+      "startTime": "2025-08-20T00:13:24.008Z",
+      "endTime": "2025-08-20T16:16:30.026Z",
+      "actualEndTime": null,
+      "isActive": false,
+      "isGap": true,
+      "entries": 0,
+      "tokenCounts": {
+        "inputTokens": 0,
+        "outputTokens": 0,
+        "cacheCreationInputTokens": 0,
+        "cacheReadInputTokens": 0
+      },
+      "totalTokens": 0,
+      "costUSD": 0,
+      "models": [],
+      "burnRate": null,
+      "projection": null
+    },
+    {
+      "id": "2025-08-20T16:00:00.000Z",
+      "startTime": "2025-08-20T16:00:00.000Z",
+      "endTime": "2025-08-20T21:00:00.000Z",
+      "actualEndTime": "2025-08-20T20:55:58.919Z",
+      "isActive": false,
+      "isGap": false,
+      "entries": 39,
+      "tokenCounts": {
+        "inputTokens": 91,
+        "outputTokens": 4614,
+        "cacheCreationInputTokens": 43633,
+        "cacheReadInputTokens": 639237
+      },
+      "totalTokens": 687575,
+      "costUSD": 2.1243892499999997,
+      "models": [
+        "<synthetic>",
+        "claude-opus-4-1-20250805"
+      ],
+      "burnRate": null,
+      "projection": null
+    },
+    {
+      "id": "2025-08-20T21:00:00.000Z",
+      "startTime": "2025-08-20T21:00:00.000Z",
+      "endTime": "2025-08-21T02:00:00.000Z",
+      "actualEndTime": "2025-08-20T21:35:55.635Z",
+      "isActive": false,
+      "isGap": false,
+      "entries": 38,
+      "tokenCounts": {
+        "inputTokens": 69,
+        "outputTokens": 4828,
+        "cacheCreationInputTokens": 84748,
+        "cacheReadInputTokens": 1070486
+      },
+      "totalTokens": 1160131,
+      "costUSD": 3.557888999999999,
+      "models": [
+        "claude-opus-4-1-20250805"
+      ],
+      "burnRate": null,
+      "projection": null
+    },
+    {
+      "id": "gap-2025-08-21T02:35:55.635Z",
+      "startTime": "2025-08-21T02:35:55.635Z",
+      "endTime": "2025-08-22T16:54:59.094Z",
+      "actualEndTime": null,
+      "isActive": false,
+      "isGap": true,
+      "entries": 0,
+      "tokenCounts": {
+        "inputTokens": 0,
+        "outputTokens": 0,
+        "cacheCreationInputTokens": 0,
+        "cacheReadInputTokens": 0
+      },
+      "totalTokens": 0,
+      "costUSD": 0,
+      "models": [],
+      "burnRate": null,
+      "projection": null
+    },
+    {
+      "id": "2025-08-22T16:00:00.000Z",
+      "startTime": "2025-08-22T16:00:00.000Z",
+      "endTime": "2025-08-22T21:00:00.000Z",
+      "actualEndTime": "2025-08-22T17:18:54.944Z",
+      "isActive": false,
+      "isGap": false,
+      "entries": 37,
+      "tokenCounts": {
+        "inputTokens": 206,
+        "outputTokens": 3424,
+        "cacheCreationInputTokens": 179549,
+        "cacheReadInputTokens": 1027036
+      },
+      "totalTokens": 1210215,
+      "costUSD": 3.10574355,
+      "models": [
+        "claude-opus-4-1-20250805",
+        "claude-sonnet-4-20250514"
+      ],
+      "burnRate": null,
+      "projection": null
+    },
+    {
+      "id": "gap-2025-08-22T22:18:54.944Z",
+      "startTime": "2025-08-22T22:18:54.944Z",
+      "endTime": "2025-08-23T01:36:48.169Z",
+      "actualEndTime": null,
+      "isActive": false,
+      "isGap": true,
+      "entries": 0,
+      "tokenCounts": {
+        "inputTokens": 0,
+        "outputTokens": 0,
+        "cacheCreationInputTokens": 0,
+        "cacheReadInputTokens": 0
+      },
+      "totalTokens": 0,
+      "costUSD": 0,
+      "models": [],
+      "burnRate": null,
+      "projection": null
+    },
+    {
+      "id": "2025-08-23T01:00:00.000Z",
+      "startTime": "2025-08-23T01:00:00.000Z",
+      "endTime": "2025-08-23T06:00:00.000Z",
+      "actualEndTime": "2025-08-23T01:52:18.991Z",
+      "isActive": false,
+      "isGap": false,
+      "entries": 114,
+      "tokenCounts": {
+        "inputTokens": 1056,
+        "outputTokens": 10772,
+        "cacheCreationInputTokens": 416157,
+        "cacheReadInputTokens": 4979102
+      },
+      "totalTokens": 5407087,
+      "costUSD": 16.09533675,
+      "models": [
+        "claude-opus-4-1-20250805"
+      ],
+      "burnRate": null,
+      "projection": null
+    },
+    {
+      "id": "gap-2025-08-23T06:52:18.991Z",
+      "startTime": "2025-08-23T06:52:18.991Z",
+      "endTime": "2025-08-26T19:04:56.970Z",
+      "actualEndTime": null,
+      "isActive": false,
+      "isGap": true,
+      "entries": 0,
+      "tokenCounts": {
+        "inputTokens": 0,
+        "outputTokens": 0,
+        "cacheCreationInputTokens": 0,
+        "cacheReadInputTokens": 0
+      },
+      "totalTokens": 0,
+      "costUSD": 0,
+      "models": [],
+      "burnRate": null,
+      "projection": null
+    },
+    {
+      "id": "2025-08-26T19:00:00.000Z",
+      "startTime": "2025-08-26T19:00:00.000Z",
+      "endTime": "2025-08-27T00:00:00.000Z",
+      "actualEndTime": "2025-08-26T19:40:49.187Z",
+      "isActive": false,
+      "isGap": false,
+      "entries": 217,
+      "tokenCounts": {
+        "inputTokens": 1549,
+        "outputTokens": 10219,
+        "cacheCreationInputTokens": 729324,
+        "cacheReadInputTokens": 10754540
+      },
+      "totalTokens": 11495632,
+      "costUSD": 30.596295,
+      "models": [
+        "claude-opus-4-1-20250805"
+      ],
+      "burnRate": null,
+      "projection": null
+    },
+    {
+      "id": "gap-2025-08-27T00:40:49.187Z",
+      "startTime": "2025-08-27T00:40:49.187Z",
+      "endTime": "2025-08-27T14:59:09.891Z",
+      "actualEndTime": null,
+      "isActive": false,
+      "isGap": true,
+      "entries": 0,
+      "tokenCounts": {
+        "inputTokens": 0,
+        "outputTokens": 0,
+        "cacheCreationInputTokens": 0,
+        "cacheReadInputTokens": 0
+      },
+      "totalTokens": 0,
+      "costUSD": 0,
+      "models": [],
+      "burnRate": null,
+      "projection": null
+    },
+    {
+      "id": "2025-08-27T14:00:00.000Z",
+      "startTime": "2025-08-27T14:00:00.000Z",
+      "endTime": "2025-08-27T19:00:00.000Z",
+      "actualEndTime": "2025-08-27T16:21:11.768Z",
+      "isActive": false,
+      "isGap": false,
+      "entries": 7,
+      "tokenCounts": {
+        "inputTokens": 58,
+        "outputTokens": 574,
+        "cacheCreationInputTokens": 120080,
+        "cacheReadInputTokens": 138335
+      },
+      "totalTokens": 259047,
+      "costUSD": 2.5029225,
+      "models": [
+        "claude-opus-4-1-20250805"
+      ],
+      "burnRate": null,
+      "projection": null
+    },
+    {
+      "id": "2025-08-27T19:00:00.000Z",
+      "startTime": "2025-08-27T19:00:00.000Z",
+      "endTime": "2025-08-28T00:00:00.000Z",
+      "actualEndTime": "2025-08-27T23:58:29.798Z",
+      "isActive": false,
+      "isGap": false,
+      "entries": 236,
+      "tokenCounts": {
+        "inputTokens": 3614,
+        "outputTokens": 20005,
+        "cacheCreationInputTokens": 2559640,
+        "cacheReadInputTokens": 21008387
+      },
+      "totalTokens": 23591646,
+      "costUSD": 81.06041549999999,
+      "models": [
+        "claude-opus-4-1-20250805",
+        "<synthetic>"
+      ],
+      "burnRate": null,
+      "projection": null
+    },
+    {
+      "id": "2025-08-28T00:00:00.000Z",
+      "startTime": "2025-08-28T00:00:00.000Z",
+      "endTime": "2025-08-28T05:00:00.000Z",
+      "actualEndTime": "2025-08-28T00:09:35.316Z",
+      "isActive": true,
+      "isGap": false,
+      "entries": 3,
+      "tokenCounts": {
+        "inputTokens": 35,
+        "outputTokens": 8,
+        "cacheCreationInputTokens": 61707,
+        "cacheReadInputTokens": 120916
+      },
+      "totalTokens": 182666,
+      "costUSD": 1.3395052499999998,
+      "models": [
+        "claude-opus-4-1-20250805"
+      ],
+      "burnRate": {
+        "tokensPerMinute": 160573.73086220789,
+        "tokensPerMinuteForIndicator": 37.7994286132884,
+        "costPerHour": 70.65004615046516
+      },
+      "projection": {
+        "totalTokens": 46787658,
+        "totalCost": 343.1,
+        "remainingMinutes": 290
+      }
+    }
+  ],
+  "machine": "ClaudiusMaximus",
+  "collected_at": "2025-08-27T19:09:45-05:00"
+}

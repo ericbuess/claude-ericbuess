@@ -50,7 +50,7 @@
   },
   "statusLine": {
     "type": "command",
-    "command": "/home/ericbuess/.claude-code-ericbuess/statusline/scripts/statusline-ultra.sh"
+    "command": "/home/ericbuess/Projects/claude-ericbuess/ubuntu/statusline/scripts/statusline.sh"
   },
   "feedbackSurveyState": {
     "lastShownTime": 1754079365095

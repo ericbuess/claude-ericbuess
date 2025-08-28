@@ -53,6 +53,6 @@
   },
   "statusLine": {
     "type": "command",
-    "command": "/Users/ericbuess/.claude-code-ericbuess/statusline/scripts/statusline-accurate.sh"
+    "command": "/Users/ericbuess/Projects/claude-ericbuess/macos/statusline/scripts/statusline.sh"
   }
 }

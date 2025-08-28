@@ -4,8 +4,9 @@
 # Git-based session tracking, no cache, always fresh context
 
 # Paths
-SESSION_DATA="$HOME/.claude-ericbuess/session-data.json"
-SESSION_REPO="$HOME/.claude-ericbuess"
+REPO_ROOT="$HOME/Projects/claude-ericbuess"
+SESSION_DATA="$REPO_ROOT/session-data/session-data.json"
+SESSION_REPO="$REPO_ROOT/session-data"
 
 # Read Claude Code input JSON
 INPUT=$(cat)
@@ -227,6 +228,22 @@ if [ "$TOKENS_USED" -gt 0 ]; then
     TOKENS_FMT=$(format_number "$TOKENS_USED")
     OUTPUT="${OUTPUT} ${CYAN}📊 ${TOKENS_FMT}${RESET}"
 fi
+
+# Bible verse (daily rotation based on day of year)
+DAY_OF_YEAR=$(date +%j)
+VERSE_INDEX=$((DAY_OF_YEAR % 7))  # Rotate through 7 verses
+
+case $VERSE_INDEX in
+    0) VERSE="✝️ Php 4:13" ;;  # I can do all things through Christ
+    1) VERSE="✝️ Prv 3:5" ;;   # Trust in the Lord with all your heart
+    2) VERSE="✝️ Ps 23:1" ;;   # The Lord is my shepherd
+    3) VERSE="✝️ Jn 3:16" ;;    # For God so loved the world
+    4) VERSE="✝️ Rom 8:28" ;;  # All things work together for good
+    5) VERSE="✝️ Josh 1:9" ;;  # Be strong and courageous
+    6) VERSE="✝️ Jer 29:11" ;; # I know the plans I have for you
+esac
+
+OUTPUT="${OUTPUT} ${CYAN}${VERSE}${RESET}"
 
 # Add git branch
 if [ -n "$GIT_BRANCH" ]; then

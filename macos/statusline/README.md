@@ -5,7 +5,7 @@ A dead-simple statusline for Claude Code CLI that uses git-based session trackin
 ## How It Works
 
 1. **No cache, no cron, no complexity**
-2. Session data stored in `~/.claude-ericbuess/session-data.json`
+2. Session data stored in `~/Projects/claude-ericbuess/session-data/session-data.json`
 3. Automatically runs `ccusage` only when needed:
    - First interaction in a new 5-hour session
    - When remaining time hits 0
@@ -24,25 +24,19 @@ user@host:dir | 🟢 14/50 ⏳ 3h41m 📊 1.7M 🌿 branch*
 
 ## Setup
 
-1. Script is at: `~/.claude-code-ericbuess/statusline/scripts/statusline.sh`
+1. Script is at: `~/Projects/claude-ericbuess/macos/statusline/scripts/statusline.sh`
 2. Configured in `~/.claude/settings.json`:
 ```json
 "statusLine": {
   "type": "command", 
-  "command": "/Users/ericbuess/.claude-code-ericbuess/statusline/scripts/statusline.sh"
+  "command": "/Users/ericbuess/Projects/claude-ericbuess/macos/statusline/scripts/statusline.sh"
 }
 ```
 
 ## Multi-Machine Sync
 
-The session data at `~/.claude-ericbuess/session-data.json` is a git repo.
-To sync between machines:
-
-```bash
-cd ~/.claude-ericbuess
-git remote add origin <your-repo>
-git push -u origin main
-```
+The session data at `~/Projects/claude-ericbuess/session-data/` is tracked in the main repo.
+It syncs automatically when you push/pull the main repository.
 
 Then on other machines, it will auto-pull before reading.
 

@@ -2,7 +2,8 @@
 # Quick script to show remaining Claude time in tmux status bar
 
 # Read session data
-SESSION_DATA="$HOME/.claude-ericbuess/session-data.json"
+REPO_ROOT="$HOME/Projects/claude-ericbuess"
+SESSION_DATA="$REPO_ROOT/session-data/session-data.json"
 
 if [ -f "$SESSION_DATA" ]; then
     TIME=$(cat "$SESSION_DATA" 2>/dev/null | jq -r '.remaining_minutes // 0')
